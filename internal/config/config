@@ -1,0 +1,45 @@
+package config
+
+import (
+	"log"
+	"os"
+
+	"github.com/joho/godotenv"
+)
+
+type Config struct {
+	DBHost        string
+	DBPort        string
+	DBUser        string
+	DBPassword    string
+	DBName        string
+	BotToken      string
+	AdminUsername string
+	JWTSecret     string
+}
+
+func Load() *Config {
+	// Загружаем .env файл
+	err := godotenv.Load()
+	if err != nil {
+		log.Println("Warning: .env file not found")
+	}
+
+	return &Config{
+		DBHost:        getEnv("DB_HOST", "localhost"),
+		DBPort:        getEnv("DB_PORT", "5432"),
+		DBUser:        getEnv("DB_USER", "postgres"),
+		DBPassword:    getEnv("DB_PASSWORD", "1234"),
+		DBName:        getEnv("DB_NAME", "event_planner"),
+		BotToken:      getEnv("BOT_TOKEN", ""),
+		AdminUsername: getEnv("ADMIN_USERNAME", ""),
+		JWTSecret:     getEnv("JWT_SECRET", "default_secret_change_me"),
+	}
+}
+
+func getEnv(key, defaultValue string) string {
+	if value, exists := os.LookupEnv(key); exists {
+		return value
+	}
+	return defaultValue
+}
