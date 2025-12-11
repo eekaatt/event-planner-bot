@@ -1,1 +1,23 @@
+cat > .gitignore << 'EOF'
+# Go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+bin/
+.vscode/
 
+# База данных
+*.db
+*.db-journal
+
+# Переменные окружения
+.env
+
+# IDE
+.idea/
+*.swp
+*.swo
+*~
+EOF
