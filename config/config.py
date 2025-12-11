@@ -16,7 +16,7 @@ type Config struct {
 }
 
 func LoadConfig() (*Config, error) {
-    // Загружаем .env файл (если есть)
+    // Загружаем .env файл
     godotenv.Load()
     
     adminID, _ := strconv.ParseInt(os.Getenv("ADMIN_TELEGRAM_ID"), 10, 64)
