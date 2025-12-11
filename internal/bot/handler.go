@@ -7,9 +7,9 @@ import (
     "strings"
     "time"
 
-    "github.com/ВАШ_USERNAME/eventbot-go/internal/auth"
-    "github.com/ВАШ_USERNAME/eventbot-go/internal/database"
-    "github.com/ВАШ_USERNAME/eventbot-go/internal/models"
+    "github.com/eekaatt/event_planner_bot-go/internal/auth"
+    "github.com/eekaatt/event_planner_bot-go/internal/database"
+    "github.com/eekaatt/event_planner_bot-go/internal/models"
     tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
@@ -68,7 +68,7 @@ func (h *BotHandler) handleCommand(msg *tgbotapi.Message, user *models.User) {
     switch msg.Command() {
     case "start":
         h.sendMessage(chatID, fmt.Sprintf(
-            "👋 Привет, %s!\nЯ бот для планирования мероприятий.\n\n"+
+            "Привет, %s!\nЯ бот для планирования мероприятий.\n\n"+
             "Доступные команды:\n"+
             "/events - показать все мероприятия\n"+
             "/create - создать новое мероприятие\n"+
@@ -80,7 +80,7 @@ func (h *BotHandler) handleCommand(msg *tgbotapi.Message, user *models.User) {
     
     case "help":
         h.sendMessage(chatID, 
-            "📋 *Помощь по командам:*\n\n"+
+            "*Помощь по командам:*\n\n"+
             "/start - начать работу\n"+
             "/events - список всех мероприятий\n"+
             "/myevents - мои мероприятия\n"+
@@ -111,21 +111,21 @@ func (h *BotHandler) handleCreateEvent(msg *tgbotapi.Message, user *models.User)
     // Формат: /create Название|Описание|Дата|Место
     parts := strings.SplitN(msg.Text, " ", 2)
     if len(parts) < 2 {
-        h.sendMessage(chatID, "❌ Неверный формат. Используйте:\n"+
+        h.sendMessage(chatID, "Неверный формат. Используйте:\n"+
             "/create Название|Описание|2024-12-31|Место проведения")
         return
     }
     
     dataParts := strings.Split(parts[1], "|")
     if len(dataParts) != 4 {
-        h.sendMessage(chatID, "❌ Неверный формат. Нужно 4 части через |")
+        h.sendMessage(chatID, "Неверный формат. Нужно 4 части через |")
         return
     }
     
     // Парсим дату
     date, err := time.Parse("2006-01-02", strings.TrimSpace(dataParts[2]))
     if err != nil {
-        h.sendMessage(chatID, "❌ Неверный формат даты. Используйте YYYY-MM-DD")
+        h.sendMessage(chatID, "Неверный формат даты. Используйте YYYY-MM-DD")
         return
     }
     
@@ -139,13 +139,13 @@ func (h *BotHandler) handleCreateEvent(msg *tgbotapi.Message, user *models.User)
     }
     
     if err := h.repo.CreateEvent(event); err != nil {
-        h.sendMessage(chatID, "❌ Ошибка при создании мероприятия")
+        h.sendMessage(chatID, "Ошибка при создании мероприятия")
         log.Printf("Create event error: %v", err)
         return
     }
     
     h.sendMessage(chatID, fmt.Sprintf(
-        "✅ Мероприятие создано!\n\n"+
+        "Мероприятие создано!\n\n"+
         "*Название:* %s\n"+
         "*Описание:* %s\n"+
         "*Дата:* %s\n"+
@@ -158,17 +158,17 @@ func (h *BotHandler) handleCreateEvent(msg *tgbotapi.Message, user *models.User)
 func (h *BotHandler) handleShowEvents(chatID int64) {
     events, err := h.repo.GetAllEvents()
     if err != nil {
-        h.sendMessage(chatID, "❌ Ошибка при получении мероприятий")
+        h.sendMessage(chatID, "Ошибка при получении мероприятий")
         return
     }
     
     if len(events) == 0 {
-        h.sendMessage(chatID, "📭 Мероприятий пока нет")
+        h.sendMessage(chatID, "Мероприятий пока нет")
         return
     }
     
     var response strings.Builder
-    response.WriteString("📅 *Все мероприятия:*\n\n")
+    response.WriteString("*Все мероприятия:*\n\n")
     
     for _, event := range events {
         response.WriteString(fmt.Sprintf(
@@ -199,12 +199,12 @@ func (h *BotHandler) handleMyEvents(chatID, userID int64) {
     }
     
     if len(myEvents) == 0 {
-        h.sendMessage(chatID, "📭 У вас пока нет мероприятий")
+        h.sendMessage(chatID, "У вас пока нет мероприятий")
         return
     }
     
     var response strings.Builder
-    response.WriteString("📅 *Ваши мероприятия:*\n\n")
+    response.WriteString("*Ваши мероприятия:*\n\n")
     
     for _, event := range myEvents {
         response.WriteString(fmt.Sprintf(
@@ -226,7 +226,7 @@ func (h *BotHandler) handleAdminPanel(chatID int64, user *models.User) {
     }
     
     // Команды админа
-    response := "👑 *Админ-панель*\n\n" +
+    response := "*Админ-панель*\n\n" +
         "Доступные команды:\n" +
         "/admin_users - список пользователей\n" +
         "/admin_stats - статистика\n" +
